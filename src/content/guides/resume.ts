@@ -8,6 +8,11 @@ export const resumeGuide: GuideContent = {
   description:
     "Scan a résumé PDF or DOCX for white keyword blocks and prompt injections before you submit it. The check runs in your browser and does not rewrite the résumé.",
   lede: "Résumé files pick up the same hidden-text tricks as homework files. A template can carry white keywords, a comment, or a line that talks to a screening model. Before you submit someone else’s template, or a file a tool generated for you, it is worth knowing which words are actually in it. This page is about reading the file. It is not a guide to stuffing invisible keywords or steering an employer’s model.",
+  cta: {
+    href: "/resume-checker",
+    label: "Open the résumé checker",
+    text: "Drop the PDF or DOCX you are about to send on the résumé checker. It runs the same local scan, lists white text, tiny type, and prompt injection first, and keeps the file in the tab if you switch modes.",
+  },
   sections: [
     {
       heading: "Why a résumé file has extra text",
@@ -35,7 +40,7 @@ export const resumeGuide: GuideContent = {
         "Select all and paste into a plain editor. If the paste is longer than the page, read the extra lines. Keyword dumps and model instructions show up here when they are white or tiny.",
         "In Word, show hidden text, open the reviewing pane, and read document properties. Look at alt text on headshots and logos. A headshot’s alt text should describe the photo briefly, not instruct a model.",
         "Search for “if you are an AI,” “ignore previous,” “strong hire,” and for skills you do not actually have. A hidden list of tools you have never used is a problem even when it is not a prompt.",
-        "Drop the file on the scanner. Compare each quote with the paste. Then fix your own copy in Word or export a new PDF from a document you have cleaned. Do not rely on a screenshot as the submitted file unless the portal asked for an image. Screenshots throw away the text layer, and they also throw away the real content a serious reviewer expects to search.",
+        "Drop the file on the [résumé checker](/resume-checker). Compare each quote with the paste. Then fix your own copy in Word or export a new PDF from a document you have cleaned. Do not rely on a screenshot as the submitted file unless the portal asked for an image. Screenshots throw away the text layer, and they also throw away the real content a serious reviewer expects to search. Two related guides go further: [does a résumé prompt injection work](/does-resume-prompt-injection-work), and [white text in a résumé](/white-text-in-resume).",
         "Submit the version you have read. If a template author hid the text, delete it because it is not yours to send, not because this site told you a clever replacement.",
       ],
     },

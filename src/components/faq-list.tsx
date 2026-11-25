@@ -1,4 +1,5 @@
 import type { FaqItem } from "@/lib/faq";
+import { RichText } from "./rich-text";
 
 export function FaqList({ items, title = "Questions" }: { items: FaqItem[]; title?: string }) {
   return (
@@ -13,7 +14,9 @@ export function FaqList({ items, title = "Questions" }: { items: FaqItem[]; titl
                 <span className="mt-0.5 text-muted group-open:rotate-45" aria-hidden="true">+</span>
               </span>
             </summary>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{item.answer}</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              <RichText text={item.answer} />
+            </p>
           </details>
         ))}
       </div>

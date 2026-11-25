@@ -1,42 +1,29 @@
 import Link from "next/link";
 import { guideCatalog } from "@/content/guide-catalog";
 import type { GuideContent } from "@/content/guides/types";
+import { breadcrumbLd, faqPageLd, jsonLd } from "@/lib/structured-data";
 import { site } from "@/lib/site";
 import { AdSlot } from "./ad-slot";
 import { FaqList } from "./faq-list";
 import { InvisibleCharacterTool } from "./invisible-character-tool";
+import { RichText } from "./rich-text";
 import { ScanApp } from "./scan-app";
+import { ScanProvider } from "./scan-session";
 import { SiteShell } from "./site-shell";
-
-function jsonLd(data: unknown): string {
-  return JSON.stringify(data).replace(/</g, "\\u003c");
-}
 
 export function GuideView({ guide }: { guide: GuideContent }) {
   const pageUrl = `${site.url}${guide.href}`;
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: guide.faq.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer },
-    })),
-  };
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
-      { "@type": "ListItem", position: 2, name: guide.title, item: pageUrl },
-    ],
-  };
+  const faqLd = faqPageLd(guide.faq);
+  const crumbsLd = breadcrumbLd([
+    { name: "Home", item: site.url },
+    { name: guide.title, item: pageUrl },
+  ]);
   const related = guideCatalog.filter((item) => item.href !== guide.href);
 
   return (
     <SiteShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(crumbsLd) }} />
       <article className="mx-auto max-w-3xl px-4 pt-12">
         <nav aria-label="Breadcrumb" className="text-sm text-muted">
           <ol className="flex flex-wrap items-center gap-2">
@@ -49,20 +36,37 @@ export function GuideView({ guide }: { guide: GuideContent }) {
         </nav>
         <p className="mt-4 text-sm font-semibold uppercase tracking-wide text-green-dark">{guide.kicker}</p>
         <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">{guide.title}</h1>
-        <p className="mt-4 text-lg leading-relaxed text-muted">{guide.lede}</p>
+        <p className="mt-4 text-lg leading-relaxed text-muted">
+          <RichText text={guide.lede} />
+        </p>
+        {guide.cta ? (
+          <aside className="mt-6 rounded-2xl border border-[#b7ebc9] bg-[#f3fbf6] px-5 py-5">
+            <p className="text-sm leading-relaxed text-ink">
+              <RichText text={guide.cta.text} />
+            </p>
+            <Link
+              href={guide.cta.href}
+              className="mt-4 inline-flex rounded-lg bg-navy px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-navy-deep"
+            >
+              {guide.cta.label}
+            </Link>
+          </aside>
+        ) : null}
         <div className="mt-8 space-y-8 text-[15px] leading-7 text-[#243246]">
           {guide.sections.map((section, index) => (
             <section key={section.heading}>
               <h2 className="text-xl font-bold text-navy">{section.heading}</h2>
               {section.paragraphs.map((paragraph) => (
                 <p key={paragraph.slice(0, 48)} className="mt-3">
-                  {paragraph}
+                  <RichText text={paragraph} />
                 </p>
               ))}
               {section.steps ? (
                 <ol className="mt-3 list-decimal space-y-2 pl-5">
                   {section.steps.map((step) => (
-                    <li key={step.slice(0, 48)}>{step}</li>
+                    <li key={step.slice(0, 48)}>
+                      <RichText text={step} />
+                    </li>
                   ))}
                 </ol>
               ) : null}
@@ -71,7 +75,9 @@ export function GuideView({ guide }: { guide: GuideContent }) {
           ))}
         </div>
       </article>
-      <ScanApp />
+      <ScanProvider>
+        <ScanApp />
+      </ScanProvider>
       <FaqList items={guide.faq} title="Questions" />
       <section className="mx-auto max-w-3xl px-4 pb-4" aria-label="Related guides">
         <h2 className="text-2xl font-extrabold tracking-tight text-navy">Related guides</h2>

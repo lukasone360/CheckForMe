@@ -10,12 +10,15 @@ export function Footer() {
         <div>
           <Logo compact />
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">
-            A single-purpose check for hidden text and prompt traps in assignment files. Scans stay on your device.
+            A local check for hidden text and prompt traps in homework, résumés, and other files. Scans stay on your device.
           </p>
         </div>
         <div>
           <h2 className="text-sm font-semibold text-navy">Product</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted">
+            <li><Link href="/resume-checker" className="hover:text-navy">Résumé checker</Link></li>
+            <li><Link href="/document-checker" className="hover:text-navy">Document checker</Link></li>
+            <li><Link href="/pdf-metadata-checker" className="hover:text-navy">PDF metadata</Link></li>
             <li><Link href="/#how-it-works" className="hover:text-navy">How it works</Link></li>
             <li><Link href="/#security" className="hover:text-navy">Security</Link></li>
             <li><Link href="/#features" className="hover:text-navy">What we detect</Link></li>

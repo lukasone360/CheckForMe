@@ -6,6 +6,16 @@ const nextConfig: NextConfig = {
     config.resolve.alias.encoding = false;
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "checkforme.vercel.app" }],
+        destination: "https://checkforme.org/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

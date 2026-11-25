@@ -48,7 +48,7 @@ export const assignmentGuide: GuideContent = {
       paragraphs: [
         "A clean result means these checks did not fire. It is not a certificate. Text flattened into a picture is not read. A sentence that avoids every stock phrase can still be an instruction. Damaged files can hide a span the parser skips. The scanner does not know your course policy.",
         "Some hits are honest text. White type meant for a colored band can be reported when the scan assumes a white background. A comment that says “cite two sources” is listed at low severity because comments travel with the file. A long image description can be listed too. Read the quote before you treat a card as proof.",
-        "CheckForMe does not write the assignment, does not submit it, and does not tell you how to get around an academic integrity rule. Answer the visible question under your course’s rules. If the hidden line looks like a tell, your instructor already knows the phrase. Ask them when a file looks wrong.",
+        "CheckForMe does not write the assignment, does not submit it, and does not tell you how to get around an academic integrity rule. Answer the visible question under your course’s rules. If the hidden line looks like a tell, your instructor already knows the phrase. Ask them when a file looks wrong. For what a similarity product says in public about hidden text, see [hidden text and Turnitin](/turnitin-hidden-text).",
       ],
     },
   ],

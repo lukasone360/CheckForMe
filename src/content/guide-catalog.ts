@@ -6,8 +6,8 @@ export const guideCatalog = [
   },
   {
     href: "/detect-white-text-in-pdf",
-    label: "White text in PDFs",
-    summary: "White ink, tiny type, transparency, and text that is not painted.",
+    label: "Find hidden text in a PDF",
+    summary: "White ink, tiny fonts, transparency, and text that is not painted.",
   },
   {
     href: "/trojan-horse-prompt-homework",
@@ -33,6 +33,21 @@ export const guideCatalog = [
     href: "/check-resume-for-hidden-ai-prompt",
     label: "Hidden prompts in a resume",
     summary: "White keywords and model instructions inside a résumé file.",
+  },
+  {
+    href: "/does-resume-prompt-injection-work",
+    label: "Do résumé prompt injections work?",
+    summary: "Why a hidden instruction in a résumé usually gets flagged.",
+  },
+  {
+    href: "/white-text-in-resume",
+    label: "White text in a résumé",
+    summary: "Keyword stuffing in white type, the risks, and how to find it.",
+  },
+  {
+    href: "/turnitin-hidden-text",
+    label: "Hidden text and Turnitin",
+    summary: "What Turnitin documents in public about hidden text, and what it does not claim.",
   },
 ] as const;
 

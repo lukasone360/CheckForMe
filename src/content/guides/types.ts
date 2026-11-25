@@ -18,4 +18,6 @@ export type GuideContent = {
   faq: FaqItem[];
   /** Paste tool embedded in the article. */
   tool?: "invisible-characters";
+  /** Prominent action under the lede. */
+  cta?: { href: string; label: string; text: string };
 };

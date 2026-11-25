@@ -1,174 +1,87 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import { buildCleanDownload, buildReportHtml } from "@/lib/clean-document";
-import { remainingScanDelay } from "@/lib/scan-steps";
-import { scanBytes, scanText } from "@/lib/scan";
-import type { ScanResult } from "@/lib/types";
+import { useEffect, useId, useState } from "react";
+import { getMode, type ScanModeId } from "@/lib/modes";
+import { ModeSwitch } from "./mode-switch";
 import { ResultsView } from "./results-view";
 import { ScanningScreen } from "./scanning-screen";
+import { useScanSession } from "./scan-session";
 import { ShieldMark } from "./logo";
 
-function sleep(ms: number) {
-  return new Promise((resolve) => {
-    window.setTimeout(resolve, ms);
-  });
-}
-
-function saveFile(bytes: Uint8Array, fileName: string, mimeType: string) {
-  const blob = new Blob([Uint8Array.from(bytes)], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
-export function ScanApp({ hero = false }: { hero?: boolean }) {
+export function ScanApp({
+  hero = false,
+  showModes = false,
+  mode: modeId = "homework",
+}: {
+  hero?: boolean;
+  showModes?: boolean;
+  mode?: ScanModeId;
+}) {
+  const mode = getMode(modeId);
   const inputId = useId();
   const pasteId = useId();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const runToken = useRef(0);
   const [dragOver, setDragOver] = useState(false);
-  const [scanning, setScanning] = useState(false);
-  const [startedAt, setStartedAt] = useState(0);
-  const [scanningName, setScanningName] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<ScanResult | null>(null);
-  const [sourceBytes, setSourceBytes] = useState<Uint8Array | null>(null);
-  const [paste, setPaste] = useState("");
-  const [copied, setCopied] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [sampleBusy, setSampleBusy] = useState(false);
+  const session = useScanSession();
+  const {
+    scanning,
+    startedAt,
+    scanningName,
+    error,
+    result,
+    paste,
+    setPaste,
+    copied,
+    busy,
+    sampleBusy,
+    inputRef,
+    generation,
+    takeScroll,
+    onFiles,
+    loadSample,
+    reset,
+    copyClean,
+    downloadClean,
+    exportReport,
+    scanPasted,
+  } = session;
 
   useEffect(() => {
-    if (result) document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [result]);
+    if (!result || !takeScroll(generation)) return;
+    document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [result, generation, takeScroll]);
 
-  async function run(fileName: string, bytes: Uint8Array | null, task: () => Promise<ScanResult>) {
-    const token = runToken.current + 1;
-    runToken.current = token;
-    setScanning(true);
-    setStartedAt(performance.now());
-    setScanningName(fileName);
-    setError(null);
-    setResult(null);
-    setCopied(false);
-    setSourceBytes(bytes);
-    const started = performance.now();
-    try {
-      const next = await task();
-      const wait = remainingScanDelay(performance.now() - started);
-      if (wait > 0) await sleep(wait);
-      if (runToken.current !== token) return;
-      setResult(next);
-    } catch (caught) {
-      if (runToken.current !== token) return;
-      setResult(null);
-      setError(caught instanceof Error ? caught.message : "Something went wrong while scanning.");
-    } finally {
-      if (runToken.current === token) setScanning(false);
-    }
-  }
-
-  function onFiles(files: FileList | null) {
-    const file = files?.[0];
-    if (!file) return;
-    void file.arrayBuffer().then((buffer) => {
-      const bytes = new Uint8Array(buffer);
-      void run(file.name || "assignment", bytes, () => scanBytes(bytes, file.name || "assignment"));
-    });
-  }
-
-  async function loadSample() {
-    setSampleBusy(true);
-    setError(null);
-    try {
-      const response = await fetch("/demo/trapped-assignment.pdf");
-      if (!response.ok) {
-        throw new Error("The sample file could not be loaded.");
-      }
-      const bytes = new Uint8Array(await response.arrayBuffer());
-      await run("trapped-assignment.pdf", bytes, () => scanBytes(bytes, "trapped-assignment.pdf"));
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The sample file could not be loaded.");
-    } finally {
-      setSampleBusy(false);
-    }
-  }
-
-  function reset() {
-    runToken.current += 1;
-    setResult(null);
-    setError(null);
-    setPaste("");
-    setCopied(false);
-    setScanning(false);
-    setSourceBytes(null);
-    if (inputRef.current) inputRef.current.value = "";
-    document.getElementById("scan")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  async function copyClean() {
-    if (!result) return;
-    try {
-      await navigator.clipboard.writeText(result.cleanText);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
-  }
-
-  async function downloadClean() {
-    if (!result) return;
-    setBusy(true);
-    setError(null);
-    try {
-      const file = await buildCleanDownload(result, sourceBytes);
-      saveFile(file.bytes, file.fileName, file.mimeType);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not build the cleaned file.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function exportReport() {
-    if (!result) return;
-    const html = buildReportHtml(result);
-    const base = result.fileName.replace(/\.[^.]+$/, "") || "assignment";
-    saveFile(new TextEncoder().encode(html), `${base}.report.html`, "text/html;charset=utf-8");
-  }
+  const idleHero = hero && !result && !scanning;
 
   return (
-    <div id="scan" className={hero && !result && !scanning ? "px-4 pb-6 pt-12 sm:pt-16" : "px-4 pb-12"}>
-      {hero && !result && !scanning ? (
+    <div id="scan" className={idleHero ? "px-4 pb-6 pt-12 sm:pt-16" : showModes ? "px-4 pb-12 pt-8" : "px-4 pb-12"}>
+      {idleHero ? (
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-navy sm:text-5xl">
-            Check your assignment for hidden AI traps
-          </h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-navy sm:text-5xl">{mode.headline}</h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-            White text, tiny fonts, prompt injections — found in seconds.
+            {mode.helper[0]}
             <br />
-            Files never leave your device.
+            {mode.helper[1]}
           </p>
         </div>
       ) : null}
+
+      {showModes ? <ModeSwitch current={mode.id} /> : null}
 
       {scanning ? <ScanningScreen fileName={scanningName} startedAt={startedAt} /> : null}
 
       {result && !scanning ? (
         <ResultsView
+          key={mode.id}
           result={result}
           copied={copied}
           busy={busy}
           onCopy={() => void copyClean()}
           onDownload={() => void downloadClean()}
-          onExport={exportReport}
+          onExport={() => exportReport(mode.verdicts[result.verdict], mode.categoryOrder)}
           onReset={reset}
+          verdictLabels={mode.verdicts}
+          categoryOrder={mode.categoryOrder}
+          emphasisNote={mode.emphasisNote}
         />
       ) : null}
 
@@ -229,20 +142,20 @@ export function ScanApp({ hero = false }: { hero?: boolean }) {
 
           <div className="mt-5">
             <label htmlFor={pasteId} className="text-sm font-semibold text-ink">
-              Or paste assignment text
+              {mode.pasteLabel}
             </label>
             <textarea
               id={pasteId}
               value={paste}
               onChange={(event) => setPaste(event.target.value)}
               rows={5}
-              placeholder="Paste a question, or the paragraph that looks a little too clean."
+              placeholder={mode.pastePlaceholder}
               className="mt-2 w-full resize-y rounded-xl border border-line bg-white px-3 py-2.5 text-sm leading-relaxed text-ink shadow-sm placeholder:text-[#8b98a8]"
             />
             <button
               type="button"
               disabled={paste.trim().length === 0}
-              onClick={() => void run("Pasted text", null, () => scanText(paste, "Pasted text"))}
+              onClick={() => void scanPasted()}
               className="mt-3 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
               Scan pasted text

@@ -4,6 +4,9 @@ import { CONTENT_UPDATED, site } from "@/lib/site";
 
 const paths = [
   "/",
+  "/resume-checker",
+  "/document-checker",
+  "/pdf-metadata-checker",
   "/faq",
   "/about",
   "/contact",
@@ -18,6 +21,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${site.url}${path === "/" ? "" : path}`,
     lastModified,
     changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : 0.7,
+    priority: path === "/" ? 1 : path === "/resume-checker" || path === "/document-checker" || path === "/pdf-metadata-checker" ? 0.8 : 0.7,
   }));
 }

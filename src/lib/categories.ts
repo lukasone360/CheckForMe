@@ -65,8 +65,10 @@ export type CategoryGroup = {
 
 const SEVERITY_PENALTY: Record<Severity, number> = { high: 22, medium: 12, low: 6 };
 
-export function groupFindings(findings: Finding[]): CategoryGroup[] {
-  return CATEGORIES.map((category) => ({
+export function groupFindings(findings: Finding[], order?: readonly CategoryId[]): CategoryGroup[] {
+  const rank = new Map((order ?? CATEGORIES.map((category) => category.id)).map((id, index) => [id, index]));
+  const ordered = [...CATEGORIES].sort((a, b) => (rank.get(a.id) ?? 100) - (rank.get(b.id) ?? 100));
+  return ordered.map((category) => ({
     id: category.id,
     label: category.label,
     findings: findings.filter((finding) => category.types.includes(finding.type)),

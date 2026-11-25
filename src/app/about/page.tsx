@@ -20,7 +20,12 @@ export default function AboutPage() {
           CheckForMe is a single-purpose scanner for hidden text and prompt traps in files you already have. Pixie Ventures runs the site. Pixie Ventures is the brand behind it. The site does not ask you to create an account, and it does not publish personal names of operators.
         </p>
         <div className="mt-8 space-y-4 text-[15px] leading-7 text-[#243246]">
-          <h2 className="pt-2 text-xl font-bold text-navy">Scanning stays in the browser</h2>
+          <h2 className="pt-2 text-xl font-bold text-navy">Where to check a file</h2>
+          <p>
+            The <Link href="/" className="font-semibold text-navy hover:underline">homework check</Link> stays the student-focused scanner. The <Link href="/resume-checker" className="font-semibold text-navy hover:underline">résumé checker</Link> lists white text, tiny type, and prompt injection first. The <Link href="/document-checker" className="font-semibold text-navy hover:underline">document checker</Link> raises metadata and comments. The <Link href="/pdf-metadata-checker" className="font-semibold text-navy hover:underline">PDF metadata checker</Link> lists every Info field and any XMP packet. Switching modes keeps the file in the tab. A guide below explains one hiding place in more detail.
+          </p>
+
+          <h2 className="pt-4 text-xl font-bold text-navy">Scanning stays in the browser</h2>
           <p>
             When you drop a PDF, a Word .docx, or a pasted paragraph, the page reads it with code that runs on your device. There is no upload endpoint and no file database. The assignment, résumé, or paste is not sent to CheckForMe, not written to a server, and not kept after you close the tab. The hosting provider can still see ordinary request logs, such as the page URL and IP address. Those logs do not contain the document, because the document is never part of a request.
           </p>

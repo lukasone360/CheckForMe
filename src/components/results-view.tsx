@@ -1,25 +1,15 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { groupFindings, safetyScore, scoreTone } from "@/lib/categories";
-import type { CategoryGroup } from "@/lib/categories";
-import type { Finding, ScanResult, TranscriptSegment } from "@/lib/types";
+import { groupFindings, safetyScore, scoreTone, type CategoryGroup, type CategoryId } from "@/lib/categories";
+import type { Finding, ScanResult, TranscriptSegment, Verdict } from "@/lib/types";
 import { AdSlot } from "./ad-slot";
 
-const verdictCopy = {
-  clean: {
-    label: "Looks clean, safe to paste",
-    className: "border-[#b7ebc9] bg-[#eefbf3] text-green-dark",
-  },
-  suspicious: {
-    label: "Suspicious: review these signals before you paste",
-    className: "border-[#f3dd9a] bg-[#fff8eb] text-warn",
-  },
-  traps_found: {
-    label: "Traps found: don't paste this into AI yet",
-    className: "border-[#f6c9d0] bg-[#fff1f2] text-danger",
-  },
-} as const;
+const verdictClass: Record<Verdict, string> = {
+  clean: "border-[#b7ebc9] bg-[#eefbf3] text-green-dark",
+  suspicious: "border-[#f3dd9a] bg-[#fff8eb] text-warn",
+  traps_found: "border-[#f6c9d0] bg-[#fff1f2] text-danger",
+};
 
 const toneStroke = { good: "#1fbf5b", warn: "#e09a12", bad: "#ef4d3a" };
 
@@ -31,6 +21,9 @@ export function ResultsView({
   onDownload,
   onExport,
   onReset,
+  verdictLabels,
+  categoryOrder,
+  emphasisNote,
 }: {
   result: ScanResult;
   copied: boolean;
@@ -39,11 +32,14 @@ export function ResultsView({
   onDownload: () => void;
   onExport: () => void;
   onReset: () => void;
+  verdictLabels: Record<Verdict, string>;
+  categoryOrder: readonly CategoryId[];
+  emphasisNote: string | null;
 }) {
-  const groups = groupFindings(result.findings);
+  const groups = groupFindings(result.findings, categoryOrder);
   const score = safetyScore(result.findings);
   const tone = scoreTone(score);
-  const verdict = verdictCopy[result.verdict];
+  const verdictLabel = verdictLabels[result.verdict];
   const [openId, setOpenId] = useState<string | null>(groups.find((group) => group.findings.length > 0)?.id ?? null);
   const [preview, setPreview] = useState<Finding | null>(null);
   const trapCount = result.findings.length;
@@ -83,14 +79,16 @@ export function ResultsView({
         </div>
       </div>
 
-      <div className={`mt-10 flex items-center gap-3 rounded-2xl border px-5 py-4 text-base font-semibold ${verdict.className}`}>
+      <div className={`mt-10 flex items-center gap-3 rounded-2xl border px-5 py-4 text-base font-semibold ${verdictClass[result.verdict]}`}>
         <VerdictIcon verdict={result.verdict} />
-        <span>{verdict.label}</span>
+        <span>{verdictLabel}</span>
       </div>
 
       <div className="mt-14 flex justify-center">
         <ScoreGauge score={score} caption={caption} tone={tone} />
       </div>
+
+      {emphasisNote ? <p className="mt-6 text-sm leading-relaxed text-muted">{emphasisNote}</p> : null}
 
       <ul className="mt-14 overflow-hidden rounded-2xl border border-line bg-white">
         {groups.map((group) => (
