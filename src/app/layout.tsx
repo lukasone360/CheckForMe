@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import { adsenseClient } from "@/lib/ads";
 import { site } from "@/lib/site";
 import "./globals.css";
+
+const adsAccount = adsenseClient();
 
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -34,6 +37,7 @@ export const metadata: Metadata = {
     description: site.description,
   },
   robots: { index: true, follow: true },
+  ...(adsAccount ? { other: { "google-adsense-account": adsAccount } } : {}),
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -51,6 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             strategy="afterInteractive"
           />
         ) : null}
+        <Analytics />
       </body>
     </html>
   );

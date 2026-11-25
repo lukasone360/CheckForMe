@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { scanTopics } from "@/content/scan-topics";
+
 export function HomeSections() {
   return (
     <>
@@ -29,7 +32,7 @@ export function HomeSections() {
               The hosting provider can still see ordinary web traffic, such as the page you requested and your IP address. That log does not include the assignment, because the assignment is never part of a request.
             </p>
             <p>
-              If ads are switched on later, the ad network can set cookies. Until then, CheckForMe does not load an ad script. Details are in the privacy policy.
+              Page views are counted with Vercel Web Analytics, which does not use cookies and does not receive the file. If ads are switched on later, the ad network can set cookies. Until an ad client id and a slot id are both set, CheckForMe does not load an ad script. Details are in the privacy policy.
             </p>
           </div>
         </div>
@@ -37,21 +40,16 @@ export function HomeSections() {
 
       <section id="features" className="mx-auto max-w-5xl px-4 py-16">
         <h2 className="text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">What the scan looks for</h2>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+          Each check links to a guide on how that kind of trap is built, how to look for it yourself, and where the scanner can be wrong.
+        </p>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-          {[
-            "White, near-white, and low-contrast text",
-            "Transparent text and PDF invisible rendering",
-            "Tiny fonts, under about 2 pt",
-            "Text placed off the page or covered by a shape",
-            "Word vanish, web-hidden, and spec-vanish formatting",
-            "Zero-width characters and bidi overrides",
-            "Cyrillic or Greek letters swapped into Latin words",
-            "Prompt-injection phrases, including in text you can see",
-            "Comments, metadata, image alt text, and form fields",
-            "Deleted text still stored in tracked changes",
-          ].map((item) => (
-            <li key={item} className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink">
-              {item}
+          {scanTopics.map((item) => (
+            <li key={item.label}>
+              <Link href={item.href} className="block h-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink hover:border-navy">
+                {item.label}
+                <span className="mt-1 block text-xs font-semibold text-green-dark">Read the guide</span>
+              </Link>
             </li>
           ))}
         </ul>
@@ -60,7 +58,10 @@ export function HomeSections() {
       <section id="about" className="mx-auto max-w-3xl px-4 pb-4">
         <h2 className="text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">About</h2>
         <p className="mt-4 text-sm leading-relaxed text-muted">
-          CheckForMe is a single-purpose checker in the spirit of a small utility site: one job, no account, and a clear answer. It reports what is inside a homework file so concealed instructions are visible before you paste the assignment into a chatbot. It does not write the assignment, and a clean verdict is not a guarantee that nothing was missed.
+          CheckForMe is a single-purpose checker run by Pixie Ventures: one job, no account, and a clear answer. It reports what is inside a file so concealed instructions are visible before you paste the document into a chatbot. It does not write the assignment, and a clean verdict is not a guarantee that nothing was missed.
+        </p>
+        <p className="mt-3 text-sm">
+          <Link href="/about" className="font-semibold text-navy hover:underline">More about how the scan works</Link>
         </p>
       </section>
     </>

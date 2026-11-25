@@ -1,22 +1,23 @@
 "use client";
 
 import { useEffect } from "react";
-import { adsenseClient } from "@/lib/ads";
+import { adsenseClient, adsenseSlot, type AdPlacement } from "@/lib/ads";
 
 type AdSlotProps = {
-  slot: string;
+  placement: AdPlacement;
   className?: string;
 };
 
 /**
- * Placeholder for a future AdSense unit.
- * Renders nothing until NEXT_PUBLIC_ADSENSE_CLIENT is set at build time.
+ * AdSense unit for one placement.
+ * Renders nothing unless NEXT_PUBLIC_ADSENSE_CLIENT and a numeric slot id are both set.
  */
-export function AdSlot({ slot, className = "" }: AdSlotProps) {
+export function AdSlot({ placement, className = "" }: AdSlotProps) {
   const client = adsenseClient();
+  const slot = adsenseSlot(placement);
 
   useEffect(() => {
-    if (!client) return;
+    if (!client || !slot) return;
     const ads = (window as unknown as { adsbygoogle?: unknown[] }).adsbygoogle || [];
     (window as unknown as { adsbygoogle: unknown[] }).adsbygoogle = ads;
     try {
@@ -24,13 +25,15 @@ export function AdSlot({ slot, className = "" }: AdSlotProps) {
     } catch {
       // The ad script can reject a push when a slot is already filled.
     }
-  }, [client]);
+  }, [client, slot]);
 
-  if (!client) return null;
+  if (!client || !slot) return null;
+
+  const spacing = placement === "results" ? "mt-20" : "mt-16";
 
   return (
     <aside
-      className={`mx-auto my-8 w-full max-w-3xl ${className}`}
+      className={`mx-auto w-full max-w-3xl ${spacing} ${className}`}
       data-ad-slot={slot}
       aria-label="Advertisement"
     >

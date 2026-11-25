@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { ContactEmail } from "@/components/contact-email";
 import { SiteShell } from "@/components/site-shell";
-import { site } from "@/lib/site";
+import { contactEmail, contentUpdatedLabel } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
@@ -9,12 +10,12 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const contact = site.contactEmail || "the contact address published for this deployment";
+  const published = contactEmail();
   return (
     <SiteShell>
       <article className="mx-auto max-w-3xl px-4 py-12 text-sm leading-relaxed text-ink">
         <h1 className="text-3xl font-extrabold tracking-tight text-navy">Privacy policy</h1>
-        <p className="mt-2 text-muted">Last updated April 1, 2026.</p>
+        <p className="mt-2 text-muted">Last updated {contentUpdatedLabel()}.</p>
         <div className="mt-8 space-y-4 text-[15px] leading-7 text-[#243246]">
           <p>
             CheckForMe is a file-inspection page. This policy explains what the site can see and what it cannot.
@@ -26,9 +27,13 @@ export default function PrivacyPage() {
           <p>
             The hosting provider can log normal web requests: the URL, time, IP address, and user agent. Those logs do not contain the assignment, because the assignment is never sent as part of the request.
           </p>
+          <h2 className="pt-4 text-xl font-bold text-navy">Page views</h2>
+          <p>
+            CheckForMe loads Vercel Web Analytics to count page views. That measurement is cookie-free: it does not set a cookie, and it does not receive the assignment, résumé, or pasted text, because those never leave the browser. It records ordinary page-view data such as the path, referrer, and a coarse location derived from the IP address. Vercel’s own documentation describes the measurement.
+          </p>
           <h2 className="pt-4 text-xl font-bold text-navy">Cookies and advertising</h2>
           <p>
-            The scan itself does not set a tracking cookie. If the site operator sets the ad client id (<code>NEXT_PUBLIC_ADSENSE_CLIENT</code>), Google AdSense may load and place cookies to measure and personalize ads. Until that id is set, the ad slots render nothing and the AdSense script is not included. Google’s own policy describes how those cookies work.
+            The scan itself does not set a tracking cookie. If the site operator sets an ad client id and a numeric ad slot id, Google AdSense may load and place cookies to measure and personalize ads. Until both are set, the ad slots render nothing and the AdSense script is not included. Google’s own policy describes how those cookies work.
           </p>
           <h2 className="pt-4 text-xl font-bold text-navy">What we do not collect</h2>
           <p>
@@ -40,7 +45,8 @@ export default function PrivacyPage() {
           </p>
           <h2 className="pt-4 text-xl font-bold text-navy">Contact</h2>
           <p>
-            Privacy questions go to {contact}. Replace the published address before you apply for an ad network if this deployment still shows a placeholder.
+            Privacy questions go to <ContactEmail />.
+            {published ? null : " That placeholder is not a real inbox. This deployment has not published a contact address yet."}
           </p>
         </div>
       </article>

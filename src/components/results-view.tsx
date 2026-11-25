@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { groupFindings, safetyScore, scoreTone } from "@/lib/categories";
 import type { CategoryGroup } from "@/lib/categories";
 import type { Finding, ScanResult, TranscriptSegment } from "@/lib/types";
+import { AdSlot } from "./ad-slot";
 
 const verdictCopy = {
   clean: {
@@ -126,6 +127,8 @@ export function ResultsView({
       {preview ? (
         <DocumentPreview result={result} finding={preview} onClose={() => setPreview(null)} />
       ) : null}
+
+      <AdSlot placement="results" />
     </div>
   );
 }
