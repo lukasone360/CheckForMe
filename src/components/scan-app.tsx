@@ -42,6 +42,7 @@ export function ScanApp({ hero = false }: { hero?: boolean }) {
   const [paste, setPaste] = useState("");
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [sampleBusy, setSampleBusy] = useState(false);
 
   useEffect(() => {
     if (result) document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -80,6 +81,23 @@ export function ScanApp({ hero = false }: { hero?: boolean }) {
       const bytes = new Uint8Array(buffer);
       void run(file.name || "assignment", bytes, () => scanBytes(bytes, file.name || "assignment"));
     });
+  }
+
+  async function loadSample() {
+    setSampleBusy(true);
+    setError(null);
+    try {
+      const response = await fetch("/demo/trapped-assignment.pdf");
+      if (!response.ok) {
+        throw new Error("The sample file could not be loaded.");
+      }
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      await run("trapped-assignment.pdf", bytes, () => scanBytes(bytes, "trapped-assignment.pdf"));
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "The sample file could not be loaded.");
+    } finally {
+      setSampleBusy(false);
+    }
   }
 
   function reset() {
@@ -194,6 +212,20 @@ export function ScanApp({ hero = false }: { hero?: boolean }) {
             </div>
             <p className="text-sm text-muted">Supports PDF, DOCX, and pasted text</p>
           </label>
+
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={() => void loadSample()}
+              disabled={sampleBusy}
+              className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm font-semibold text-navy shadow-sm hover:bg-mist disabled:opacity-60"
+            >
+              {sampleBusy ? "Loading sample…" : "Try a sample trapped file"}
+            </button>
+            <p className="mt-2 text-center text-xs leading-relaxed text-muted">
+              A built-in demo PDF with white text, tiny type, a prompt injection, and a zero-width character. It stays in this tab.
+            </p>
+          </div>
 
           <div className="mt-5">
             <label htmlFor={pasteId} className="text-sm font-semibold text-ink">

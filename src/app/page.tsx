@@ -1,4 +1,3 @@
-import { AdSlot } from "@/components/ad-slot";
 import { FaqList } from "@/components/faq-list";
 import { HomeSections } from "@/components/home-sections";
 import { ScanApp } from "@/components/scan-app";
@@ -34,7 +33,6 @@ export default function HomePage() {
       <ScanApp hero />
       <HomeSections />
       <FaqList items={faqItems} title="FAQ" />
-      <AdSlot slot="home-bottom" />
     </SiteShell>
   );
 }

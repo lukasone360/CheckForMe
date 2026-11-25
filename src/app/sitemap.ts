@@ -1,18 +1,19 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
+import { guideCatalog } from "@/content/guide-catalog";
+import { CONTENT_UPDATED, site } from "@/lib/site";
 
 const paths = [
   "/",
   "/faq",
+  "/about",
+  "/contact",
   "/privacy",
   "/terms",
-  "/check-assignment-for-hidden-ai-prompt",
-  "/detect-white-text-in-pdf",
-  "/trojan-horse-prompt-homework",
+  ...guideCatalog.map((guide) => guide.href),
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-04-01");
+  const lastModified = new Date(CONTENT_UPDATED);
   return paths.map((path) => ({
     url: `${site.url}${path === "/" ? "" : path}`,
     lastModified,

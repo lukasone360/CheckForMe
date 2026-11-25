@@ -25,11 +25,15 @@ cp .env.example .env.local
 
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata, sitemap, and robots. Defaults to `https://checkforme.local`. |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | Shown in the privacy policy, terms, and footer. |
-| `NEXT_PUBLIC_ADSENSE_CLIENT` | AdSense publisher id. When unset, every ad slot renders nothing and the AdSense script is not loaded. |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata, sitemap, and robots. Defaults to `https://checkforme.vercel.app`. |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Shown on the contact page, in the privacy policy, terms, and footer. When unset, pages show `hello@[our-domain]`, which is not a real inbox. |
+| `NEXT_PUBLIC_ADSENSE_CLIENT` | AdSense publisher id (`ca-pub-…`). When unset, every ad slot renders nothing, `ads.txt` is a 404, and the AdSense script is not loaded. |
+| `NEXT_PUBLIC_ADSENSE_SLOT_RESULTS` | Numeric slot id for the unit below scan results. Ignored unless the client id is also set. |
+| `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE` | Numeric slot id for the unit at the bottom of a guide. Ignored unless the client id is also set. |
 
-Set the AdSense id, then pass a slot id into `<AdSlot slot="..." />`. The component labels the unit as an advertisement only after the client id exists.
+`<AdSlot placement="results" />` and `<AdSlot placement="guide" />` read those slot ids. The component renders nothing until both the client id and a numeric slot id exist. With a client id set, the root layout adds `<meta name="google-adsense-account">` and `/ads.txt` serves `google.com, pub-…, DIRECT, f08c47fec0942fa0`.
+
+`npm run generate-demo` rebuilds `public/demo/trapped-assignment.pdf`, the sample the home page scans locally.
 
 ## Tests and sample files
 

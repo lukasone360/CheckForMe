@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { landingPages, site } from "@/lib/site";
+import { guideCatalog } from "@/content/guide-catalog";
+import { contactEmail } from "@/lib/site";
 import { Logo } from "./logo";
 
 export function Footer() {
@@ -19,12 +20,14 @@ export function Footer() {
             <li><Link href="/#security" className="hover:text-navy">Security</Link></li>
             <li><Link href="/#features" className="hover:text-navy">What we detect</Link></li>
             <li><Link href="/faq" className="hover:text-navy">FAQ</Link></li>
+            <li><Link href="/about" className="hover:text-navy">About</Link></li>
+            <li><Link href="/contact" className="hover:text-navy">Contact</Link></li>
           </ul>
         </div>
         <div>
           <h2 className="text-sm font-semibold text-navy">Guides</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted">
-            {landingPages.map((page) => (
+            {guideCatalog.map((page) => (
               <li key={page.href}>
                 <Link href={page.href} className="hover:text-navy">{page.label}</Link>
               </li>
@@ -36,16 +39,18 @@ export function Footer() {
           <ul className="mt-3 space-y-2 text-sm text-muted">
             <li><Link href="/privacy" className="hover:text-navy">Privacy policy</Link></li>
             <li><Link href="/terms" className="hover:text-navy">Terms of use</Link></li>
-            {site.contactEmail ? (
+            {contactEmail() ? (
               <li>
-                <a href={`mailto:${site.contactEmail}`} className="hover:text-navy">{site.contactEmail}</a>
+                <a href={`mailto:${contactEmail()}`} className="hover:text-navy">{contactEmail()}</a>
               </li>
-            ) : null}
+            ) : (
+              <li><Link href="/contact" className="hover:text-navy">Email</Link></li>
+            )}
           </ul>
         </div>
       </div>
       <div className="border-t border-line py-4 text-center text-xs text-muted">
-        © {new Date().getFullYear()} CheckForMe. Files are scanned locally and are not uploaded.
+        © {new Date().getFullYear()} CheckForMe, a Pixie Ventures site. Files are scanned locally and are not uploaded.
       </div>
     </footer>
   );

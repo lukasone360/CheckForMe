@@ -14,6 +14,16 @@ function expectTrap(result: ScanResult, type: FindingType, verdict: Verdict = "t
 }
 
 describe("sample files", () => {
+  it("scans the built-in demo PDF for several traps at once", async () => {
+    const bytes = await readFile(new URL("../public/demo/trapped-assignment.pdf", import.meta.url));
+    const result = await scanBytes(new Uint8Array(bytes), "trapped-assignment.pdf");
+    for (const type of ["white-text", "tiny-font", "prompt-injection", "zero-width"] as const) {
+      expect(result.findings.some((finding) => finding.type === type), JSON.stringify(result.findings, null, 2)).toBe(true);
+    }
+    expect(result.verdict).toBe("traps_found");
+    expect(result.cleanText.toLowerCase()).toContain("photosynthesis");
+  });
+
   it("reads clean PDF, DOCX, and text as clean", async () => {
     for (const name of ["clean.pdf", "clean.docx", "clean.txt"]) {
       const result = await scan(name);

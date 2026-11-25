@@ -10,9 +10,11 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "generate-samples": "node scripts/generate-samples.mjs"
+    "generate-samples": "node scripts/generate-samples.mjs",
+    "generate-demo": "node scripts/generate-demo-pdf.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "@xmldom/xmldom": "^0.9.12",
     "fast-xml-parser": "^4.5.3",
     "jszip": "^3.10.1",
