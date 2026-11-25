@@ -17,6 +17,7 @@
     "fast-xml-parser": "^4.5.3",
     "jszip": "^3.10.1",
     "next": "^15.5.29",
+    "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.10.38",
     "react": "19.1.0",
     "react-dom": "19.1.0"
@@ -30,7 +31,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^15.5.29",
-    "pdf-lib": "^1.17.1",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^3.2.4"

@@ -267,6 +267,18 @@ function assessRun(run: TextRun): Assessment {
     });
   }
 
+  if (run.source === "annotation" && hasWords) {
+    findings.push({
+      type: "comment",
+      severity: injections.some((item) => item.severity === "high") ? "high" : "low",
+      title: "Note stored in the PDF",
+      description: "PDF annotations stay in the file even when they are easy to miss on the page.",
+      text: snippet(text),
+      location: run.location,
+      page: run.page,
+    });
+  }
+
   if (run.source === "comment" && hasWords) {
     findings.push({
       type: "comment",
@@ -347,6 +359,27 @@ function assessRun(run: TextRun): Assessment {
       .filter((item) => item.severity === "high")
       .map((item) => ({ start: item.start, end: item.end })),
   };
+}
+
+/** How a run should be rewritten when building a cleaned file. */
+export function planRunCleanup(run: TextRun): { action: "keep" | "drop" | "rewrite"; text: string } {
+  const assessment = assessRun(run);
+  if (run.source === "metadata" || run.source === "alt") {
+    return assessment.findings.length > 0 ? { action: "drop", text: "" } : { action: "keep", text: run.text };
+  }
+  if (
+    run.source === "comment" ||
+    run.source === "form" ||
+    run.source === "annotation" ||
+    run.source === "deleted"
+  ) {
+    return { action: "drop", text: "" };
+  }
+  if (assessment.concealed) return { action: "drop", text: "" };
+  const rewritten = stripHighInjections(stripInvisible(run.text)).trim();
+  if (!rewritten) return { action: "drop", text: "" };
+  if (rewritten !== run.text) return { action: "rewrite", text: rewritten };
+  return { action: "keep", text: run.text };
 }
 
 function dedupeFindings(findings: Finding[]): Finding[] {
