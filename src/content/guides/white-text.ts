@@ -2,12 +2,12 @@ import type { GuideContent } from "./types";
 
 export const whiteTextGuide: GuideContent = {
   href: "/detect-white-text-in-pdf",
-  label: "White text in PDFs",
+  label: "Find hidden text in a PDF",
   kicker: "PDF scan",
-  title: "Detect white text in a PDF",
+  title: "Find Hidden Text in a PDF: White Text, Tiny Fonts & More",
   description:
-    "Find white or near-white text, tiny type, transparent text, and off-page text in a PDF. The detector runs locally in your browser.",
-  lede: "White letters on a white page disappear when you read the assignment and stay in the file as ordinary words. A chatbot that receives the PDF, or the paste of “select all,” reads them. This guide covers how PDF text gets hidden, how to check a file yourself, and the cases where white type is a legitimate part of a template.",
+    "Find hidden text in a PDF: white or near-white type, tiny fonts, transparent text, and text that is not painted. The check runs in your browser.",
+  lede: "Find hidden text in a PDF by looking past the page you can see. White letters on a white page disappear when you read the file and stay in the document as ordinary words, and so do tiny fonts, transparent type, and text that is drawn but not painted. A chatbot that receives the PDF, or the paste of “select all,” reads them. This guide covers how that text gets hidden, how to check a file yourself, and the cases where white type is a legitimate part of a template.",
   sections: [
     {
       heading: "How white text works in a PDF",
@@ -48,6 +48,7 @@ export const whiteTextGuide: GuideContent = {
       heading: "Limits",
       paragraphs: [
         "The scanner does not OCR a picture. Flattened pages, outlined letters, and password-protected files are not read, and a link to Canvas is not fetched. Drop the file you have. A clean report means these concealment checks, plus the invisible-character and injection checks in the same pass, did not fire. It does not mean a course allows the assignment to be pasted into a chatbot. Use the result to see the file, then answer the visible question under those rules. The quoted sentence is the part worth reading twice. Keep a copy of the original.",
+        "The same PDF tricks show up on résumés. [White text in a résumé](/white-text-in-resume) covers keyword stuffing, and the [résumé checker](/resume-checker) lists that text first. Properties are a separate list: the [PDF metadata checker](/pdf-metadata-checker) shows every Info field and any XMP packet.",
       ],
     },
   ],

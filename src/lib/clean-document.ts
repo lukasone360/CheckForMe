@@ -3,8 +3,7 @@ import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 import { planRunCleanup } from "./analyze";
 import { extractDocx } from "./extract/docx";
 import type { Finding, ScanResult } from "./types";
-import { safetyScore } from "./categories";
-import { groupFindings } from "./categories";
+import { groupFindings, safetyScore, type CategoryId } from "./categories";
 
 export type CleanFile = {
   bytes: Uint8Array;
@@ -259,15 +258,19 @@ export async function buildCleanDownload(result: ScanResult, original?: Uint8Arr
   return buildCleanText(result.cleanText, name);
 }
 
-export function buildReportHtml(result: ScanResult): string {
+export function buildReportHtml(
+  result: ScanResult,
+  options?: { verdictLabel?: string; categoryOrder?: readonly CategoryId[] },
+): string {
   const score = safetyScore(result.findings);
-  const groups = groupFindings(result.findings);
+  const groups = groupFindings(result.findings, options?.categoryOrder);
   const verdict =
-    result.verdict === "clean"
+    options?.verdictLabel ??
+    (result.verdict === "clean"
       ? "Looks clean, safe to paste"
       : result.verdict === "suspicious"
         ? "Suspicious: review these signals before you paste"
-        : "Traps found: don't paste this into AI yet";
+        : "Traps found: don't paste this into AI yet");
   const rows = groups
     .map((group) => {
       const items =

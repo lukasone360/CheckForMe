@@ -9,6 +9,7 @@ export function countWords(text: string): number {
 /** Article prose: lede, headings, paragraphs, and manual steps. FAQs are counted separately. */
 export function guideBodyWordCount(guide: GuideContent): number {
   const parts = [guide.lede];
+  if (guide.cta) parts.push(guide.cta.text, guide.cta.label);
   for (const section of guide.sections) {
     parts.push(section.heading, ...section.paragraphs, ...(section.steps ?? []));
   }

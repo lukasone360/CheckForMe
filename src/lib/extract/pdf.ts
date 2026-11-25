@@ -1,6 +1,7 @@
 import type { ExtractedDocument, RGB, TextRun } from "../types";
 import { ScanError } from "../types";
 import { cmykToRgb, grayToRgb, normalizeRgb, WHITE } from "../color";
+import { buildMetadataFields, type MetadataField } from "../metadata-fields";
 
 type Mat = [number, number, number, number, number, number];
 type Rect = { x: number; y: number; w: number; h: number };
@@ -150,11 +151,22 @@ type PdfjsModule = {
   GlobalWorkerOptions: { workerSrc: string };
 };
 
+type PdfMetadataObject = {
+  getAll?: () => Map<string, unknown> | Record<string, unknown>;
+  getRaw?: () => string;
+};
+
 type PdfDocument = {
   numPages: number;
   getPage: (n: number) => Promise<PdfPage>;
-  getMetadata: () => Promise<{ info?: Record<string, unknown> }>;
+  getMetadata: () => Promise<{ info?: Record<string, unknown>; metadata?: PdfMetadataObject | null }>;
   destroy: () => Promise<void>;
+};
+
+export type PdfMetadataReport = {
+  fileName: string;
+  pageCount: number;
+  fields: MetadataField[];
 };
 
 type PdfPage = {
@@ -520,7 +532,7 @@ function spacers(drafts: Draft[]) {
   }
 }
 
-export async function extractPdf(data: Uint8Array, fileName: string): Promise<ExtractedDocument> {
+async function openPdf(data: Uint8Array): Promise<PdfDocument> {
   const pdfjs = await loadPdfjs();
   if (typeof window !== "undefined") {
     pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
@@ -542,9 +554,8 @@ export async function extractPdf(data: Uint8Array, fileName: string): Promise<Ex
     cMapPacked: true,
   });
 
-  let pdf: PdfDocument;
   try {
-    pdf = await task.promise;
+    return await task.promise;
   } catch (error) {
     const name = error instanceof Error ? error.name : "";
     if (name === "PasswordException") {
@@ -552,7 +563,37 @@ export async function extractPdf(data: Uint8Array, fileName: string): Promise<Ex
     }
     throw new ScanError("This PDF could not be opened. It may be damaged or not a real PDF.");
   }
+}
 
+function xmpEntries(metadata: PdfMetadataObject | null | undefined): Array<[string, unknown]> {
+  if (!metadata?.getAll) return [];
+  const all = metadata.getAll();
+  if (all instanceof Map) return [...all.entries()];
+  if (all && typeof all === "object") return Object.entries(all);
+  return [];
+}
+
+export async function readPdfMetadata(data: Uint8Array, fileName: string): Promise<PdfMetadataReport> {
+  const pdf = await openPdf(data);
+  try {
+    const metadata = await pdf.getMetadata().catch(() => ({
+      info: {} as Record<string, unknown>,
+      metadata: null,
+    }));
+    const fields = buildMetadataFields(
+      (metadata.info ?? {}) as Record<string, unknown>,
+      xmpEntries(metadata.metadata),
+      metadata.metadata?.getRaw?.() ?? null,
+    );
+    return { fileName, pageCount: pdf.numPages, fields };
+  } finally {
+    await pdf.destroy().catch(() => undefined);
+  }
+}
+
+export async function extractPdf(data: Uint8Array, fileName: string): Promise<ExtractedDocument> {
+  const pdfjs = await loadPdfjs();
+  const pdf = await openPdf(data);
   try {
     const runs: TextRun[] = [];
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {

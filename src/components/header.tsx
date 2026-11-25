@@ -28,7 +28,7 @@ export function Header() {
             All checks stay private
           </span>
           <Link
-            href="/#scan"
+            href="#scan"
             className="inline-flex items-center gap-2 rounded-lg bg-navy px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-navy-deep"
           >
             <UploadIcon />

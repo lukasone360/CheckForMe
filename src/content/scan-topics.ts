@@ -14,4 +14,7 @@ export const scanTopics: { label: string; href: GuideHref }[] = [
   { label: "Deleted text still stored in tracked changes", href: "/detect-hidden-text-in-word" },
   { label: "Hidden text in a downloaded Canvas assignment", href: "/canvas-assignment-hidden-text" },
   { label: "Hidden prompts or keyword blocks in a résumé", href: "/check-resume-for-hidden-ai-prompt" },
+  { label: "Whether a hidden résumé prompt actually works", href: "/does-resume-prompt-injection-work" },
+  { label: "White-font keyword stuffing on a résumé", href: "/white-text-in-resume" },
+  { label: "Hidden text and what Turnitin documents publicly", href: "/turnitin-hidden-text" },
 ];

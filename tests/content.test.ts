@@ -4,11 +4,16 @@ import { scanTopics } from "@/content/scan-topics";
 import { assignmentGuide } from "@/content/guides/assignment";
 import { canvasGuide } from "@/content/guides/canvas";
 import { invisibleGuide } from "@/content/guides/invisible";
+import { resumeInjectionGuide } from "@/content/guides/resume-injection";
 import { resumeGuide } from "@/content/guides/resume";
 import { trojanGuide } from "@/content/guides/trojan";
+import { turnitinGuide } from "@/content/guides/turnitin";
+import { whiteResumeGuide } from "@/content/guides/white-resume";
 import { whiteTextGuide } from "@/content/guides/white-text";
 import { wordGuide } from "@/content/guides/word";
-import { guideBodyWordCount, guideFaqWordCount } from "@/content/guides/words";
+import { guideBodyWordCount, guideFaqWordCount, countWords } from "@/content/guides/words";
+import { metadataPage } from "@/content/metadata-page";
+import { modeArticles } from "@/content/mode-copy";
 import { adsenseClient, adsenseSlot, adsTxtBody } from "@/lib/ads";
 import {
   CONTACT_EMAIL_PLACEHOLDER,
@@ -29,7 +34,16 @@ const guides = [
   wordGuide,
   invisibleGuide,
   resumeGuide,
+  resumeInjectionGuide,
+  whiteResumeGuide,
+  turnitinGuide,
 ];
+
+const longForm = new Set([
+  resumeInjectionGuide.href,
+  whiteResumeGuide.href,
+  turnitinGuide.href,
+]);
 
 const expanded = new Set([
   assignmentGuide.href,
@@ -54,7 +68,39 @@ describe("guides", () => {
       if (expanded.has(count.href)) {
         expect(total, `${count.href} total ${total} (body ${count.body}, faq ${count.faq})`).toBeLessThanOrEqual(1200);
       }
+      if (longForm.has(count.href)) {
+        expect(count.body, `${count.href} body ${count.body}`).toBeLessThanOrEqual(1500);
+        expect(total, `${count.href} total ${total}`).toBeLessThanOrEqual(1500);
+      }
     }
+  });
+
+  it("keeps the white-text guide aimed at finding hidden PDF text", () => {
+    expect(whiteTextGuide.title).toBe("Find Hidden Text in a PDF: White Text, Tiny Fonts & More");
+    expect(whiteTextGuide.description.toLowerCase()).toContain("find hidden text in a pdf");
+    expect(whiteTextGuide.lede.toLowerCase()).toContain("find hidden text in a pdf");
+  });
+
+  it("links every résumé guide to the résumé checker", () => {
+    for (const guide of [resumeGuide, resumeInjectionGuide, whiteResumeGuide]) {
+      expect(JSON.stringify(guide), guide.href).toContain("/resume-checker");
+    }
+    expect(resumeGuide.cta?.href).toBe("/resume-checker");
+  });
+
+  it("keeps mode pages and the metadata explainer in range", () => {
+    for (const id of ["resume", "document"] as const) {
+      const article = modeArticles[id];
+      const parts = article.sections.flatMap((section) => [section.heading, ...section.paragraphs]);
+      const words = countWords(parts.join("\n"));
+      expect(words, `${id} ${words}`).toBeGreaterThanOrEqual(300);
+      expect(words, `${id} ${words}`).toBeLessThanOrEqual(500);
+      expect(article.faq.length).toBeGreaterThanOrEqual(5);
+    }
+    const metaParts = [metadataPage.lede, ...metadataPage.sections.flatMap((section) => [section.heading, ...section.paragraphs])];
+    const metaWords = countWords(metaParts.join("\n"));
+    expect(metaWords, `metadata body ${metaWords}`).toBeGreaterThanOrEqual(800);
+    expect(metaWords, `metadata body ${metaWords}`).toBeLessThanOrEqual(1500);
   });
 
   it("lists every guide in the catalog, sitemap, and homepage topics", () => {
@@ -64,7 +110,9 @@ describe("guides", () => {
       expect(urls, guide.href).toContain(guide.href);
       expect(scanTopics.some((topic) => topic.href === guide.href), guide.href).toBe(true);
     }
-    expect(urls).toEqual(expect.arrayContaining(["/", "/about", "/contact", "/privacy", "/terms", "/faq"]));
+    expect(urls).toEqual(
+      expect.arrayContaining(["/", "/about", "/contact", "/privacy", "/terms", "/faq", "/resume-checker", "/document-checker", "/pdf-metadata-checker"]),
+    );
   });
 });
 
