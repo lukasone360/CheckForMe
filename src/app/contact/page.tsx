@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ContactEmail } from "@/components/contact-email";
 import { SiteShell } from "@/components/site-shell";
-import { contactEmail } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const email = contactEmail();
   return (
     <SiteShell>
       <article className="mx-auto max-w-3xl px-4 py-12">
@@ -24,15 +22,9 @@ export default function ContactPage() {
           <p className="mt-2 text-2xl font-extrabold tracking-tight text-navy">
             <ContactEmail />
           </p>
-          {email ? (
-            <p className="mt-3 text-sm leading-relaxed text-muted">
-              The scanner still does not accept files by email. Do not attach an assignment or a résumé. Describe the problem, and leave the document on your own computer.
-            </p>
-          ) : (
-            <p className="mt-3 text-sm leading-relaxed text-muted">
-              hello@[our-domain] is a placeholder, not a real inbox. This deployment has not published a contact address yet. There is no other address to try, and the placeholder will not receive mail.
-            </p>
-          )}
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            The scanner still does not accept files by email. Do not attach an assignment or a résumé. Describe the problem, and leave the document on your own computer.
+          </p>
         </div>
         <div className="mt-8 space-y-4 text-[15px] leading-7 text-[#243246]">
           <h2 className="text-xl font-bold text-navy">What we can help with</h2>

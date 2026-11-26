@@ -6,7 +6,7 @@ export const wordGuide: GuideContent = {
   kicker: "Word files",
   title: "Detect hidden text in a Word document",
   description:
-    "Scan a .docx for comments, w:vanish hidden formatting, tracked changes, metadata, white text, and prompt injections. The check runs in your browser.",
+    "Scan a .docx for comments, hidden text, tracked changes, metadata, white text, and prompt injections. The check runs in your browser.",
   lede: "A Word document is a zip of XML. The page you see is one part. Comments, document properties, deleted revisions, and runs marked hidden are other parts, and they stay in the file when you email it or drop it on a chatbot. This guide walks through those parts, how to open them in Word, and what a local scan quotes back.",
   sections: [
     {

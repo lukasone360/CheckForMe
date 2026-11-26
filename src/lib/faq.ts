@@ -29,6 +29,6 @@ export const faqItems: FaqItem[] = [
   {
     question: "Is CheckForMe free?",
     answer:
-      "Yes. There is no sign-up. The site is built so ad slots can be turned on later; until an ad client id is configured, those slots render nothing.",
+      "Yes. There is no sign-up. CheckForMe is free and supported by ads. The [privacy policy](/privacy) explains how those ads use cookies and how to opt out of personalized ads.",
   },
 ];

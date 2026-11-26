@@ -65,7 +65,7 @@ export const invisibleGuide: GuideContent = {
     {
       question: "Does the paste leave my browser?",
       answer:
-        "No. The check runs on this page, in the tab, using the same detection functions as a PDF or DOCX scan. There is no upload field behind the box. Closing the tab drops the text.",
+        "No. The check runs on this page, in the tab, using the same checks as a PDF or DOCX scan. Nothing you paste is uploaded. Closing the tab drops the text.",
     },
     {
       question: "Why did an emoji get flagged?",

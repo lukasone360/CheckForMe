@@ -106,7 +106,7 @@ export const modeArticles: Record<"resume" | "document", ModeArticle> = {
       {
         question: "Is the file uploaded?",
         answer:
-          "No. Parsing happens in the browser. There is no upload endpoint for the document.",
+          "No. The scan runs in your browser. The document is not uploaded.",
       },
     ],
   },

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ContactEmail } from "@/components/contact-email";
 import { SiteShell } from "@/components/site-shell";
-import { contactEmail, contentUpdatedLabel } from "@/lib/site";
+import { contentUpdatedLabel } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Terms of use",
@@ -10,7 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  const published = contactEmail();
   return (
     <SiteShell>
       <article className="mx-auto max-w-3xl px-4 py-12">
@@ -38,12 +38,13 @@ export default function TermsPage() {
           </p>
           <h2 className="pt-4 text-xl font-bold text-navy">Ads</h2>
           <p>
-            The page may show ads. Ad slots stay empty until an advertising client id and a numeric slot id are both configured. Third-party ad vendors have their own terms.
+            CheckForMe is free because it&apos;s supported by ads. Ads may be served by third parties such as Google, who may use cookies to show ads based on your visits to this and other sites. See our{" "}
+            <Link href="/privacy" className="font-semibold text-navy hover:underline">Privacy Policy</Link>{" "}
+            for details and how to opt out. Third-party ad providers have their own terms and policies.
           </p>
           <h2 className="pt-4 text-xl font-bold text-navy">Changes</h2>
           <p>
             These terms can be updated by changing this page. Continued use after a change means you accept the new terms. Questions: <ContactEmail />.
-            {published ? null : " That placeholder is not a real inbox. This deployment has not published a contact address yet."}
           </p>
         </div>
       </article>

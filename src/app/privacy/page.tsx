@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ContactEmail } from "@/components/contact-email";
 import { SiteShell } from "@/components/site-shell";
-import { contactEmail, contentUpdatedLabel } from "@/lib/site";
+import { contentUpdatedLabel } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const published = contactEmail();
   return (
     <SiteShell>
       <article className="mx-auto max-w-3xl px-4 py-12 text-sm leading-relaxed text-ink">
@@ -33,7 +32,10 @@ export default function PrivacyPage() {
           </p>
           <h2 className="pt-4 text-xl font-bold text-navy">Cookies and advertising</h2>
           <p>
-            The scan itself does not set a tracking cookie. If the site operator sets an ad client id and a numeric ad slot id, Google AdSense may load and place cookies to measure and personalize ads. Until both are set, the ad slots render nothing and the AdSense script is not included. Google’s own policy describes how those cookies work.
+            The scan itself does not set a tracking cookie. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this site or other sites. Google’s use of advertising cookies enables it and its partners to serve ads based on your visits to this site and other sites on the Internet. You can opt out of personalized ads in{" "}
+            <a href="https://adssettings.google.com" className="font-semibold text-navy underline-offset-2 hover:underline">Google Ads Settings</a>{" "}
+            (https://adssettings.google.com). You can also opt out of a third-party vendor’s use of cookies for personalized advertising at{" "}
+            <a href="https://www.aboutads.info" className="font-semibold text-navy underline-offset-2 hover:underline">www.aboutads.info</a>.
           </p>
           <h2 className="pt-4 text-xl font-bold text-navy">What we do not collect</h2>
           <p>
@@ -46,7 +48,6 @@ export default function PrivacyPage() {
           <h2 className="pt-4 text-xl font-bold text-navy">Contact</h2>
           <p>
             Privacy questions go to <ContactEmail />.
-            {published ? null : " That placeholder is not a real inbox. This deployment has not published a contact address yet."}
           </p>
         </div>
       </article>

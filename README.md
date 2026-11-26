@@ -26,7 +26,7 @@ cp .env.example .env.local
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata, sitemap, and robots. Defaults to `https://checkforme.vercel.app`. |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | Shown on the contact page, in the privacy policy, terms, and footer. When unset, pages show `hello@[our-domain]`, which is not a real inbox. |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Shown on the contact page, in the privacy policy, terms, and footer. When unset, pages show `hello@checkforme.org`. |
 | `NEXT_PUBLIC_ADSENSE_CLIENT` | AdSense publisher id (`ca-pub-…`). When unset, every ad slot renders nothing, `ads.txt` is a 404, and the AdSense script is not loaded. |
 | `NEXT_PUBLIC_ADSENSE_SLOT_RESULTS` | Numeric slot id for the unit below scan results. Ignored unless the client id is also set. |
 | `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE` | Numeric slot id for the unit at the bottom of a guide. Ignored unless the client id is also set. |

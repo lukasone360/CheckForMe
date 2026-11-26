@@ -27,10 +27,10 @@ export default function AboutPage() {
 
           <h2 className="pt-4 text-xl font-bold text-navy">Scanning stays in the browser</h2>
           <p>
-            When you drop a PDF, a Word .docx, or a pasted paragraph, the page reads it with code that runs on your device. There is no upload endpoint and no file database. The assignment, résumé, or paste is not sent to CheckForMe, not written to a server, and not kept after you close the tab. The hosting provider can still see ordinary request logs, such as the page URL and IP address. Those logs do not contain the document, because the document is never part of a request.
+            When you drop a PDF, a Word .docx, or a pasted paragraph, the page reads it on your device. The file is not uploaded, and CheckForMe does not keep a copy. The assignment, résumé, or paste is not sent to CheckForMe, not written to a server, and not kept after you close the tab. The hosting provider can still see ordinary request logs, such as the page URL and IP address. Those logs do not contain the document, because the document is never part of a request.
           </p>
           <p>
-            The same rule covers the sample file and the invisible-character box. The sample is a file this site already published. Loading it does not upload anything of yours. The character check uses the same detection functions as a file scan, on the text in the box, and stops there.
+            The same rule covers the sample file and the invisible-character box. The sample is a file this site already published. Loading it does not upload anything of yours. The character check uses the same checks as a file scan, on the text in the box, and stops there.
           </p>
 
           <h2 className="pt-4 text-xl font-bold text-navy">What a scan looks for</h2>

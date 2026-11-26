@@ -6,8 +6,8 @@ export const turnitinGuide: GuideContent = {
   kicker: "Submissions",
   title: "Hidden text and Turnitin",
   description:
-    "What Turnitin’s public guides say about hidden text and replaced characters in a submission, what a flag means, and how to inspect a file yourself. No claims about unpublished internals.",
-  lede: "Turnitin is a similarity product many schools use on student submissions. Its own public guides describe flags for hidden text and for characters swapped in from another alphabet. This page stays inside that published description. It does not guess at unpublished matching code, and it is not a way to hide text from a submission.",
+    "What Turnitin’s public guides say about hidden text and replaced characters in a submission, what a flag means, and how to inspect a file yourself.",
+  lede: "Turnitin is a similarity product many schools use on student submissions. Its own public guides describe flags for hidden text and for characters swapped in from another alphabet. This page stays inside that published description, and it is not a way to hide text from a submission.",
   sections: [
     {
       heading: "What Turnitin has published",
@@ -78,7 +78,7 @@ export const turnitinGuide: GuideContent = {
     {
       question: "Does the 500-character note apply to every Turnitin feature?",
       answer:
-        "The flags guide says the flags pass looks at documents of at least 500 characters, not counting spaces. This page does not extend that sentence to other products or to unpublished behavior.",
+        "The flags guide says the flags pass looks at documents of at least 500 characters, not counting spaces. That note describes the flags check in those public guides. It does not describe every Turnitin feature.",
     },
     {
       question: "Can I use this to hide text from a submission?",
