@@ -1,23 +1,23 @@
 const DEFAULT_SITE_URL = "https://checkforme.vercel.app";
 
 /** Bump when public pages or legal copy change. Sitemap and legal pages read this. */
-export const CONTENT_UPDATED = "2026-11-25";
+export const CONTENT_UPDATED = "2026-11-26";
 
-/** Shown when NEXT_PUBLIC_CONTACT_EMAIL is unset. Not a real inbox. */
-export const CONTACT_EMAIL_PLACEHOLDER = "hello@[our-domain]";
+/** Public inbox. NEXT_PUBLIC_CONTACT_EMAIL overrides this when set. */
+export const DEFAULT_CONTACT_EMAIL = "hello@checkforme.org";
 
 export function siteUrl(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   return (raw && raw.length > 0 ? raw : DEFAULT_SITE_URL).replace(/\/$/, "");
 }
 
-export function contactEmail(): string | undefined {
+export function contactEmail(): string {
   const raw = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
-  return raw && raw.length > 0 ? raw : undefined;
+  return raw && raw.length > 0 ? raw : DEFAULT_CONTACT_EMAIL;
 }
 
 export function contactEmailLabel(): string {
-  return contactEmail() ?? CONTACT_EMAIL_PLACEHOLDER;
+  return contactEmail();
 }
 
 export function contentUpdatedLabel(): string {
@@ -39,6 +39,6 @@ export const site = {
   description:
     "Find white text, tiny fonts, invisible characters, and prompt injections hidden in homework files. PDF and DOCX scans run in your browser — files never leave your device.",
   get contactEmail() {
-    return contactEmail() ?? "";
+    return contactEmail();
   },
 };

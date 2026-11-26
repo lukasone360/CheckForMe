@@ -26,13 +26,14 @@ export function HomeSections() {
           <h2 className="text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">Security</h2>
           <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             <p>
-              Parsing happens in the page. There is no upload endpoint and no file database. Closing the tab drops the document from memory.
+              The scan runs in the page. The file is not uploaded, and CheckForMe does not keep a copy. Closing the tab drops the document from memory.
             </p>
             <p>
               The hosting provider can still see ordinary web traffic, such as the page you requested and your IP address. That log does not include the assignment, because the assignment is never part of a request.
             </p>
             <p>
-              Page views are counted with Vercel Web Analytics, which does not use cookies and does not receive the file. If ads are switched on later, the ad network can set cookies. Until an ad client id and a slot id are both set, CheckForMe does not load an ad script. Details are in the privacy policy.
+              Page views are counted with Vercel Web Analytics, which does not use cookies and does not receive the file. Ads may be served by third parties, including Google, which can use cookies to show ads based on your visits to this site and others. Details and how to opt out are in the{" "}
+              <Link href="/privacy" className="font-semibold text-navy hover:underline">privacy policy</Link>.
             </p>
           </div>
         </div>

@@ -16,8 +16,8 @@ import { metadataPage } from "@/content/metadata-page";
 import { modeArticles } from "@/content/mode-copy";
 import { adsenseClient, adsenseSlot, adsTxtBody } from "@/lib/ads";
 import {
-  CONTACT_EMAIL_PLACEHOLDER,
   CONTENT_UPDATED,
+  DEFAULT_CONTACT_EMAIL,
   contactEmail,
   contactEmailLabel,
   contentUpdatedLabel,
@@ -117,16 +117,15 @@ describe("guides", () => {
 });
 
 describe("site helpers", () => {
-  it("falls back to the public site URL and a non-address placeholder", () => {
+  it("falls back to the public site URL and hello@checkforme.org", () => {
     const previousUrl = process.env.NEXT_PUBLIC_SITE_URL;
     const previousEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
     delete process.env.NEXT_PUBLIC_SITE_URL;
     delete process.env.NEXT_PUBLIC_CONTACT_EMAIL;
     expect(siteUrl()).toBe("https://checkforme.vercel.app");
-    expect(contactEmail()).toBeUndefined();
-    expect(contactEmailLabel()).toBe(CONTACT_EMAIL_PLACEHOLDER);
-    expect(CONTACT_EMAIL_PLACEHOLDER).toBe("hello@[our-domain]");
-    expect(CONTACT_EMAIL_PLACEHOLDER.includes("@[")).toBe(true);
+    expect(contactEmail()).toBe("hello@checkforme.org");
+    expect(contactEmailLabel()).toBe(DEFAULT_CONTACT_EMAIL);
+    expect(DEFAULT_CONTACT_EMAIL).toBe("hello@checkforme.org");
 
     process.env.NEXT_PUBLIC_SITE_URL = "https://example.com/";
     process.env.NEXT_PUBLIC_CONTACT_EMAIL = "  hi@example.com  ";
@@ -141,10 +140,10 @@ describe("site helpers", () => {
   });
 
   it("publishes a single updated date", () => {
-    expect(CONTENT_UPDATED).toBe("2026-11-25");
-    expect(contentUpdatedLabel()).toBe("November 25, 2026");
+    expect(CONTENT_UPDATED).toBe("2026-11-26");
+    expect(contentUpdatedLabel()).toBe("November 26, 2026");
     const dates = sitemap().map((entry) => entry.lastModified);
-    expect(dates.every((date) => date instanceof Date && date.toISOString().startsWith("2026-11-25"))).toBe(true);
+    expect(dates.every((date) => date instanceof Date && date.toISOString().startsWith("2026-11-26"))).toBe(true);
   });
 });
 

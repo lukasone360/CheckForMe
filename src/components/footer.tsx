@@ -42,13 +42,9 @@ export function Footer() {
           <ul className="mt-3 space-y-2 text-sm text-muted">
             <li><Link href="/privacy" className="hover:text-navy">Privacy policy</Link></li>
             <li><Link href="/terms" className="hover:text-navy">Terms of use</Link></li>
-            {contactEmail() ? (
-              <li>
-                <a href={`mailto:${contactEmail()}`} className="hover:text-navy">{contactEmail()}</a>
-              </li>
-            ) : (
-              <li><Link href="/contact" className="hover:text-navy">Email</Link></li>
-            )}
+            <li>
+              <a href={`mailto:${contactEmail()}`} className="hover:text-navy">{contactEmail()}</a>
+            </li>
           </ul>
         </div>
       </div>
